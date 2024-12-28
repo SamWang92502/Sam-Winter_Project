@@ -1,4 +1,4 @@
-package urlshorterner;
+package com.example.urlshortener;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

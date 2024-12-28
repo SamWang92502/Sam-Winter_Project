@@ -1,4 +1,4 @@
-package urlshorterner;
+package com.example.urlshortener;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

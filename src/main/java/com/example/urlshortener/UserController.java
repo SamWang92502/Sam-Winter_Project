@@ -1,4 +1,4 @@
-package user;
+package com.example.urlshortener;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
