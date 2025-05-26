@@ -1,11 +1,14 @@
-package com.example.urlshortener;
+package com.sam.urlshortener.controller;
 
+import com.sam.urlshortener.model.User;
+import com.sam.urlshortener.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     private final UserService userService;
@@ -21,9 +24,7 @@ public class UserController {
         private String password;
 
         // Getters
-        public String getUsername() {
-            return username;
-        }
+        public String getUsername() {return username;}
 
         public String getEmail() {
             return email;
@@ -47,6 +48,7 @@ public class UserController {
         }
     }
 
+
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request) {
         try {
@@ -57,11 +59,10 @@ public class UserController {
             );
             return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Internal server error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
         }
     }
+
 }

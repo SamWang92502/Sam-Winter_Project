@@ -1,4 +1,4 @@
-package com.example.urlshortener;
+package com.sam.urlshortener.dto;
 
 public class UrlResponse {
     private String originalUrl;
