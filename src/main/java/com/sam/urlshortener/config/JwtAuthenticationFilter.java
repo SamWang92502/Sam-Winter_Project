@@ -17,7 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component //Tells Spring to treat this class as a managed bean and include it in the context.
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtils jwtUtils;

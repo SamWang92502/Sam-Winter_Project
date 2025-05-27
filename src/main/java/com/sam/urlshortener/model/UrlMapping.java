@@ -1,5 +1,6 @@
 package com.sam.urlshortener.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,7 +16,7 @@ public class UrlMapping {
     private Long id;
 
     @NotNull
-    @Size(max = 255)
+    @Size(max = 2048)
     @Column(name = "long_url", nullable = false)
     private String longUrl;
 
@@ -43,6 +44,7 @@ public class UrlMapping {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user; // This links a URL mapping to a specific user
 
     // Default Constructor

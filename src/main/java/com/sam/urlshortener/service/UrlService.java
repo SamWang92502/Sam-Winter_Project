@@ -1,5 +1,5 @@
 package com.sam.urlshortener.service;
-
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.sam.urlshortener.dto.UrlResponse;
 import com.sam.urlshortener.dto.UrlDetailsDto;
 import com.sam.urlshortener.model.UrlMapping;
@@ -27,7 +27,9 @@ public class UrlService {
     // Method to shorten a URL and associate it with a user
     public UrlResponse shortenUrl(String longUrl, String customAlias, User user) {
         String shortUrl = (customAlias != null && !customAlias.isEmpty())
+                //if yes
                 ? customAlias // Ternary operator: shortcut for if-else in Java
+                //if no
                 : UUID.randomUUID().toString().substring(0, 6); // Generate random short URL
                 // UUID: Universally Unique Identifier
 
@@ -46,10 +48,15 @@ public class UrlService {
         urlMapping.setUser(user); // Associate URL with the user
         //Saves the new record to the database using Spring Data JPA.
         urlRepository.save(urlMapping);
+        String fullShortUrl = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/{alias}")
+                .buildAndExpand(shortUrl)
+                .toUriString();
 
         // Return the response
         // Returns a DTO containing the values the frontend or client can use/display.
-        return new UrlResponse(longUrl, shortUrl, customAlias);
+        return new UrlResponse(longUrl, fullShortUrl, customAlias);
     }
 
     // Method to get the original long URL by short URL

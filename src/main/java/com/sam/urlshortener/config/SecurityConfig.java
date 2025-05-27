@@ -3,6 +3,7 @@ import com.sam.urlshortener.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -50,6 +51,7 @@ public class SecurityConfig {
                                 "/api/redirect/**",
                                 "/api/login",
                                 "/api/urls").permitAll() // Allow unauthenticated access to /users
+                        .requestMatchers(HttpMethod.GET, "/{alias}").permitAll()
                         .anyRequest().authenticated() // Require authentication for other endpoints
                 )
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
