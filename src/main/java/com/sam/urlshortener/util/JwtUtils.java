@@ -1,4 +1,4 @@
-package com.sam.urlshortener.config;
+package com.sam.urlshortener.util;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import io.jsonwebtoken.*;

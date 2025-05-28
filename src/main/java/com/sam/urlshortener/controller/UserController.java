@@ -1,5 +1,7 @@
 package com.sam.urlshortener.controller;
 
+import com.sam.urlshortener.dto.CreateUserRequest;
+import jakarta.validation.Valid;
 import com.sam.urlshortener.model.User;
 import com.sam.urlshortener.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
+// Port 3000 might be front end
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
@@ -17,46 +20,10 @@ public class UserController {
         this.userService = userService;
     }
 
-    // This DTO is just to parse incoming JSON
-    static class CreateUserRequest {
-        private String username;
-        private String email;
-        private String password;
-
-        // Getters
-        public String getUsername() {return username;}
-
-        public String getEmail() {
-            return email;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        // Setters
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
-
-
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request) {
         try {
-            User newUser = userService.createUser(
-                    request.getUsername(),
-                    request.getEmail(),
-                    request.getPassword()
-            );
+            User newUser = userService.createUser(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

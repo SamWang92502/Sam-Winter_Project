@@ -1,17 +1,16 @@
 package com.sam.urlshortener.controller;
-import com.sam.urlshortener.dto.ShortenRequest;
-import com.sam.urlshortener.dto.UrlResponse;
+import com.sam.urlshortener.dto.*;
 import com.sam.urlshortener.model.UrlMapping;
 import com.sam.urlshortener.model.User;
 import com.sam.urlshortener.service.UrlService;
 import com.sam.urlshortener.service.UserService;
-import com.sam.urlshortener.dto.UrlDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -36,13 +35,13 @@ public class UrlController {
     // Endpoint to shorten a URL
     // This maps the HTTP POST request to the URL path /shorten
     @PostMapping("/shorten")
-    // @RequestParam String originalUrl: It expects a query/body parameter named originalUrl
-    // @RequestParam(required = false) String customAlias:
-    // This is an optional parameter — the user can provide a custom short alias if they want (short.ly/myalias).
-    // If not provided, the system will auto-generate one.
-    // This is how the server identifies which user is making the request.
     public ResponseEntity<UrlResponse> shortenUrl(@RequestBody ShortenRequest request) {
-        User user = getCurrentUser();
+        User user = null;
+        try {
+            user = getCurrentUser(); // Try to get logged-in user, if any
+        } catch (Exception e) {
+            // User is anonymous — leave user = null
+        }
 
         UrlResponse response = urlService.shortenUrl(
                 request.getOriginalUrl(),
@@ -53,11 +52,11 @@ public class UrlController {
     }
 
     // Endpoint to delete a shortened URL
-    @DeleteMapping("/delete/{alias}")
-    public ResponseEntity<String> deleteUrl(@PathVariable String alias) {
-        User user = getCurrentUser();
-        urlService.deleteUrl(alias, user);
-        return ResponseEntity.ok("URL deleted successfully.");
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteShortUrl(@RequestBody DeleteUrlRequest request) {
+        User user = getCurrentUser(); // or use @AuthenticationPrincipal
+        String deletedUrl = urlService.deleteUrl(request.getShortUrl(), user);
+        return ResponseEntity.ok("\"shortUrl\": \"" + deletedUrl + "\" has been deleted successfully");
     }
 
     // Endpoint to get all URLs for the logged-in user
@@ -69,21 +68,32 @@ public class UrlController {
     }
 
     // Endpoint to rename a shortened URL
-    @PutMapping("/urls/rename")
-    public ResponseEntity<String> renameShortUrl(@RequestParam String oldAlias,
-                                                 @RequestParam String newAlias) {
+    @PatchMapping("/urls/id/{id}/custom-alias")
+    public ResponseEntity<RenameAliasResponse> renameShortUrl(@PathVariable Long id,
+                                                 @RequestBody Map<String, String> body) {
         User user = getCurrentUser();
-        urlService.renameShortUrl(oldAlias, newAlias, user);
-        return ResponseEntity.ok("Short URL renamed successfully.");
+        String newAlias = body.get("customAlias");
+
+        if (newAlias == null || newAlias.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        RenameAliasResponse response = urlService.renameShortUrlById(id, newAlias, user);
+        return ResponseEntity.ok(response);
+
     }
 
     @PutMapping("/urls/edit")
-    public ResponseEntity<String> editDestinationUrl(@RequestParam String shortUrl,
-                                                     @RequestParam String newLongUrl) {
-        User user = getCurrentUser();
-        urlService.editDestinationUrl(shortUrl, newLongUrl, user);
-        return ResponseEntity.ok("Destination URL updated successfully.");
+    public ResponseEntity<EditUrlResponse> editDestinationUrl(@RequestBody EditUrlRequest request) {
+        User user = getCurrentUser(); // or use @AuthenticationPrincipal UserDetailsImpl
+        EditUrlResponse response = urlService.editDestinationUrl(
+                request.getShortUrl(),
+                request.getNewLongUrl(),
+                user
+        );
+        return ResponseEntity.ok(response);
     }
+
 
 
     @GetMapping("/urls/analytics")

@@ -16,8 +16,8 @@ public class AnalyticsService {
     }
 
     // Record a click for the given short URL
-    public void recordClick(String shortUrl) {
-        UrlMapping urlMapping = urlRepository.findByShortUrl(shortUrl);
+    public void recordClick(String alias) {
+        UrlMapping urlMapping = urlRepository.findByCustomAlias(alias);
         if (urlMapping != null) {
             urlMapping.setHitCount(urlMapping.getHitCount() + 1); // Increment hit count
             urlMapping.setLastAccessed(LocalDateTime.now()); // Update last accessed timestamp
@@ -28,20 +28,20 @@ public class AnalyticsService {
     }
 
     // Get the total click count for a short URL
-    public int getClickCount(String shortUrl) {
-        UrlMapping urlMapping = urlRepository.findByShortUrl(shortUrl);
+    public int getClickCount(String alias) {
+        UrlMapping urlMapping = urlRepository.findByCustomAlias(alias);
         return (urlMapping != null) ? urlMapping.getHitCount() : 0;
     }
 
     // Get the last accessed time for a short URL
-    public LocalDateTime getLastAccessed(String shortUrl) {
-        UrlMapping urlMapping = urlRepository.findByShortUrl(shortUrl);
+    public LocalDateTime getLastAccessed(String alias) {
+        UrlMapping urlMapping = urlRepository.findByCustomAlias(alias);
         return (urlMapping != null) ? urlMapping.getLastAccessed() : null;
     }
 
     // Initialize analytics for a new short URL (optional if `hit_count` defaults to 0)
-    public void initializeAnalytics(String shortUrl) {
-        UrlMapping urlMapping = urlRepository.findByShortUrl(shortUrl);
+    public void initializeAnalytics(String alias) {
+        UrlMapping urlMapping = urlRepository.findByCustomAlias(alias);
         if (urlMapping != null) {
             urlMapping.setHitCount(0);
             urlMapping.setLastAccessed(null);

@@ -1,5 +1,7 @@
 package com.sam.urlshortener.controller;
 
+import com.sam.urlshortener.dto.CreateUserRequest;
+import jakarta.validation.Valid;
 import com.sam.urlshortener.model.User;
 import com.sam.urlshortener.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -41,16 +43,11 @@ public class AuthController {
     // @RequestBody: tells Spring “Take the JSON data from the HTTP request body, and convert (deserialize) it into a Java object.”
     // SignupRequest is a custom class (a DTO – Data Transfer Object) that likely has fields like username and password.
     // signupRequest is just the name of the variable that holds the deserialized object.
-    public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<?> signup(@RequestBody @Valid CreateUserRequest signupRequest) {
         // You put code inside a try block that might throw an exception — for example, invalid input, a duplicate user, etc.
         // If that exception does happen, Java skips the rest of the try block and runs the catch block.
         try {
-            //This line calls a service method to create a new user in the database.
-            User user = userService.createUser(
-                    signupRequest.getUsername(),
-                    signupRequest.getEmail(),
-                    signupRequest.getPassword()
-            );
+            User user = userService.createUser(signupRequest);
             //After successfully creating the user, a JWT token is generated for that user.
             String token = userService.generateTokenForUser(user.getUsername());
             //This token will be returned to the client to be used for future authenticated requests.
@@ -67,42 +64,6 @@ public class AuthController {
     (like between a client and a server, or a controller and a service).
     It typically contains only fields and getters/setters, with no business logic.
      */
-    // DTO for signup
-    static class SignupRequest {
-        private String username;
-        private String password;
-        private String email;
-
-        // Getters and setters
-        /*
-        setUsername() → (object populated) → getUsername() used in your backend
-        Think of SignupRequest like a form someone fills out.
-        - setUsername("sam123") = user fills in the form
-        Object populated: Filling the fields (like username and password) of an object with actual values.
-        - getUsername() = backend reads what the user filled in
-        ex. Registering a new user: getUsername() and getPassword() are used to extract user input and pass it to the service layer.
-         */
-        public String getUsername() {
-            return username;
-        }
-        public void setUsername(String username) {
-            this.username = username;
-        }
-        public String getPassword() {
-            return password;
-        }
-        public void setPassword(String password) {
-            this.password = password;
-        }
-        public String getEmail() {
-            return email;
-        }
-        public void setEmail(String email) {
-            this.email = email;
-        }
-    }
-
-
 
     // DTO for login request
     static class LoginRequest {

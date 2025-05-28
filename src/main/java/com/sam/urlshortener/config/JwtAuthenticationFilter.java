@@ -1,6 +1,6 @@
 package com.sam.urlshortener.config;
 
-import com.sam.urlshortener.config.JwtUtils;
+import com.sam.urlshortener.util.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

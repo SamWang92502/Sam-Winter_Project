@@ -20,10 +20,12 @@ public class UrlMapping {
     @Column(name = "long_url", nullable = false)
     private String longUrl;
 
+    /*
     @NotNull
     @Size(max = 255)
     @Column(name = "short_url", nullable = false, unique = true)
     private String shortUrl;
+     */
 
     @Size(max = 255)
     @Column(name = "custom_alias")
@@ -51,9 +53,9 @@ public class UrlMapping {
     public UrlMapping() {}
 
     // Parameterized Constructor
-    public UrlMapping(String longUrl, String shortUrl, String customAlias, LocalDateTime createdAt, LocalDateTime expirationDate, User user) {
+    public UrlMapping(String longUrl, String customAlias, LocalDateTime createdAt, LocalDateTime expirationDate, User user) {
         this.longUrl = longUrl;
-        this.shortUrl = shortUrl;
+        //this.shortUrl = shortUrl;
         this.customAlias = customAlias;
         this.createdAt = createdAt;
         this.expirationDate = expirationDate;
@@ -77,6 +79,7 @@ public class UrlMapping {
         this.longUrl = longUrl;
     }
 
+    /*
     public String getShortUrl() {
         return shortUrl;
     }
@@ -84,6 +87,7 @@ public class UrlMapping {
     public void setShortUrl(String shortUrl) {
         this.shortUrl = shortUrl;
     }
+     */
 
     public String getCustomAlias() {
         return customAlias;
@@ -139,7 +143,6 @@ public class UrlMapping {
         return "UrlMapping{" +
                 "id=" + id +
                 ", longUrl='" + longUrl + '\'' +
-                ", shortUrl='" + shortUrl + '\'' +
                 ", customAlias='" + customAlias + '\'' +
                 ", createdAt=" + createdAt +
                 ", expirationDate=" + expirationDate +
@@ -154,12 +157,11 @@ public class UrlMapping {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UrlMapping that = (UrlMapping) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(shortUrl, that.shortUrl);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, shortUrl);
+        return Objects.hash(id);
     }
 }

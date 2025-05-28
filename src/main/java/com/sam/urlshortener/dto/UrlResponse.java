@@ -4,12 +4,14 @@ public class UrlResponse {
     private String originalUrl;
     private String shortenedUrl;
     private String customAlias;
+    private String qrCodeBase64;
 
     // Constructor
-    public UrlResponse(String originalUrl, String shortenedUrl, String customAlias) {
+    public UrlResponse(String originalUrl, String shortenedUrl, String customAlias, String qrCodeBase64) {
         this.originalUrl = originalUrl;
         this.shortenedUrl = shortenedUrl;
         this.customAlias = customAlias;
+        this.qrCodeBase64 = qrCodeBase64;
     }
 
     // Getters and Setters
@@ -36,4 +38,13 @@ public class UrlResponse {
     public void setCustomAlias(String customAlias) {
         this.customAlias = customAlias;
     }
+
+    public String getQrCodeBase64() {
+        return qrCodeBase64;
+    }
+
+    public void setQrCodeBase64(String qrCodeBase64) {
+        this.qrCodeBase64 = qrCodeBase64;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.sam.urlshortener.service;
 
-import com.sam.urlshortener.config.JwtUtils;
+import com.sam.urlshortener.util.JwtUtils;
+import com.sam.urlshortener.dto.CreateUserRequest;
 import com.sam.urlshortener.model.User;
 import com.sam.urlshortener.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +23,11 @@ public class UserService {
         this.jwtUtils = jwtUtils;
     }
 
-    public User createUser(String username, String email, String password) {
+    public User createUser(CreateUserRequest request) {
+        String username = request.getUsername();
+        String email = request.getEmail();
+        String password = request.getPassword();
+
         if (username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Username cannot be empty");
         }
